@@ -6,6 +6,7 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 class NavLeft extends Component {
   componentWillMount() {
+      console.log(MenuConfig)
     const menuTreeNode = this.renderMenu(MenuConfig);
     this.setState({
       menuTreeNode
@@ -13,6 +14,7 @@ class NavLeft extends Component {
   }
   //菜单渲染
   renderMenu = (data) => {
+      console.log(data);
     return data.map((item) => {
       if (item.children) {
         return(
