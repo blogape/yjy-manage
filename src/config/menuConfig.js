@@ -42,12 +42,12 @@ const menuList = [
         ]
     },
     {
-        title: '表单',
-        key: '/form',
+        title: '食谱管理',
+        key: '/recipe',
         children: [
             {
-                title: '登录',
-                key: '/admin/form/login',
+                title: '食谱列表',
+                key: '/admin/recipe/recipelist',
             },
             {
                 title: '注册',

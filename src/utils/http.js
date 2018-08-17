@@ -1,27 +1,31 @@
 import axios from "axios";
 // import QS from 'qs';
-import { getToken, removeToken } from '@/utils/token'
+
+import { getToken, removeToken } from './token.js'
+import history from './history'
 
 import { message } from "antd";
 
-console.log(process.env.NODE_ENV);
 
+
+
+axios.defaults.baseURL='http://192.168.1.52:8765';
 // create an axios instance
-
-const service = axios.create({
-  baseURL:process.env.NODE_ENV === "development"? "http://localhost:3000": "http://69.171.69.13:3001",
-  timeout: 20000
-});
+// const service = axios.create({
+//   baseURL:'http://192.168.1.52:8765',// api的base_url
+//   timeout: 20000
+// });
 
 //request interceptor
 
-service.interceptors.request.use(
+axios.interceptors.request.use(
   config => {
     // loading.show(config);
-
+    // alert('111');
     let token = getToken();
+    console.log(token);
     if (token) {
-      config.headers["Authorizaton"] = "Bearer" + token; //让每个请求携带token ['X-Token'] 为自定义key
+      config.headers.Token = token; //让每个请求携带token ['X-Token'] 为自定义key
     }
     return config;
   },
@@ -34,12 +38,13 @@ service.interceptors.request.use(
 
 // respone interceptor
 
-service.interceptors.response.use(
+axios.interceptors.response.use(
   response => {
     // loading.hide(response.config);
     const res = response.data;
-
-    if (res.statusCode !== 200) {
+      console.log(res.code);
+    if (res.code !== 0) {
+      console.log(res);
       message.error(res.msg);
       return Promise.reject(res.msg);
     } else {
@@ -68,4 +73,4 @@ service.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-export default service;
+export default axios;

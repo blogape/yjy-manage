@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import  App from './App.js';
 import './index.css';
-import Admin from './admin';
 import Router from './router.js';
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(<Router />, document.getElementById('root'));
-registerServiceWorker();
+// registerServiceWorker();

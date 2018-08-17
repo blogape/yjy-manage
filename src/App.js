@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import './utils/http.js';
+import service from './utils/http.js';
 class App extends Component {
   render() {
     return (
