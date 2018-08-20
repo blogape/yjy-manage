@@ -15,7 +15,7 @@ class Admin extends Component {
           <NavLeft />
         </Col>
         <Col span={21} className="main">
-          <Header />
+          <Header history ={this.props} />
           <Row className="content">        {this.props.children}</Row>
           <Footer className="" />
         </Col>

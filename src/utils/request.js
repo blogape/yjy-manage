@@ -1,11 +1,10 @@
 import axios from "axios";
 // import QS from 'qs';
 
-import { getToken, removeToken } from './token.js'
+import { getToken, removeToken,getmyToken } from './token.js'
 import history from './history'
 
 import { message } from "antd";
-
 
 
 
@@ -21,17 +20,16 @@ axios.defaults.baseURL='http://192.168.1.52:8765';
 axios.interceptors.request.use(
   config => {
     // loading.show(config);
-    // alert('111');
     let token = getToken();
-    console.log(token);
     if (token) {
-      config.headers.Token = token; //让每个请求携带token ['X-Token'] 为自定义key
+     var mytoken=JSON.parse(token);
+      config.headers.Token = mytoken.token; //让每个请求携带token ['X-Token'] 为自定义key
     }
     return config;
   },
   error => {
     // Do something with request error
-    //console.log(error) // for debug
+    console.log(error) // for debug
     Promise.reject(error);
   }
 );
@@ -40,14 +38,15 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
+
     // loading.hide(response.config);
     const res = response.data;
-      console.log(res.code);
     if (res.code !== 0) {
-      console.log(res);
+   
       message.error(res.msg);
       return Promise.reject(res.msg);
     } else {
+   
       return response.data;
     }
   },

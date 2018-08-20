@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import service from './utils/http.js';
+import service from './utils/request.js';
 class App extends Component {
   render() {
     return (

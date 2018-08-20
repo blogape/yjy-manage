@@ -9,6 +9,7 @@ import Buttons from "./pages/ui/buttons/index";
 import Nomatch from "./pages/nomatch/index";
 import Modals from './pages/ui/modals/index.js';
 import Recipelist from './pages/recipeinfo/recipelist/index.js'
+import Addrecipe from './pages/recipeinfo/recipeadd/recipeadd.js';
 class IRouter extends Component {
   render() {
     return (
@@ -24,7 +25,8 @@ class IRouter extends Component {
                 <Route   path="/admin/home" component={Home} />
                 <Route   path="/admin/ui/modals" component={Modals} />
                 <Route   path="/admin/recipe/recipelist" component={Recipelist} />
-                <Route   path="/admin/recipe/recipedetail" component={Recipedetail} />
+                <Route   path="/admin/recipe/recipedetail/:id" component={Recipedetail} />
+                <Route   path="/admin/recipe/addrecipe" component={Addrecipe}/>
                 <Route   component={Nomatch} />
                 </Switch>
               </Admin>

@@ -1,18 +1,29 @@
 import React, { Component } from "react";
 import { Row, Col } from "antd";
+import { HashRouter, Route, Switch ,withRouter} from "react-router-dom";
+
+
+
 import "./index.less";
 import Util from "../../utils/utils";
 import axios from "axios";
 import { getToken, removeToken } from "../../utils/token.js";
+import {logout} from '../../services/api.js';
 class Header extends Component {
   state = {};
   componentWillMount() {
     // 转成对象
     let token = JSON.parse(getToken());
     // 设置用户名
-    this.setState({
-      username: token.nickname
-    });
+    
+    if(token==null){
+     this.props.history.push('/login');
+    }else{
+      this.setState({
+        username: token.nickname
+      });
+    }
+   
     // 设置时间
     setInterval(() => {
       let sysTime = Util.formateDate(new Date().getTime());
@@ -20,19 +31,31 @@ class Header extends Component {
         sysTime
       });
     }, 1000);
+    
   }
-  outClick() {
-    axios.get("http://192.168.1.52:8765/api/user-service/backUser/logout").then(response => {
-      console.log(response);
-    });
-  }
+ 
+    logout=async()=>{
+      const { history } = this.props;
+
+      try{
+        await logout();
+      }
+      catch(e){
+
+      }
+      removeToken();
+      this.props.history.push('/login')
+
+    }
+   
+
   render() {
     return (
       <div className="header">
         <Row className="header-top">
           <Col span="24">
             <span>欢迎 {this.state.username}</span>
-            <a onClick={this.outClick.bind(this)}>退出</a>
+            <a onClick={this.logout.bind(this)}>退出</a>
           </Col>
         </Row>
         <Row className="breadcrumb">
@@ -49,4 +72,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);

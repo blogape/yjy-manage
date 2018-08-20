@@ -1,11 +1,17 @@
 import React, { Component } from "react";
+import  {recipelist,deleterecipe} from '../../../services/api.js';
+import { HashRouter, Route, Switch ,withRouter} from "react-router-dom";
+
 import {
   Input,
   Col,
+  message,
   Tooltip,
   Button,
   Popconfirm,
   Icon,
+
+  Pagination,
   Table,
   Select,
   Modal,
@@ -15,33 +21,42 @@ import {
 import "./index.less";
 const InputGroup = Input.Group;
 const Option = Select.Option;
+
 const children=[];
 const showAddress=['轮播图','视图展示区','热门食谱']
 for (let i = 0; i < showAddress.length; i++) {
     children.push(<Option key={i.toString(showAddress.length) + i}>{showAddress[i] }</Option>);
   }
 const data = [];
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    name: `加班3个小时以上 有餐补15块钱 ${i}`,
-    age: 32,
-    createtime:'2018-08-09',
-    state:'下架',
-    address: `London, Park Lane no. ${i}`,
 
-  });
-}
 function handleChange(value) {
     console.log(`selected ${value}`);
   }
+function  callback(key) {
+  console.log(key);
+}
+  const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`;
+
+
 class recipeList extends Component {
+
+
     state = {
         selectedRowKeys: [], // Check here to configure the default column
         loading: false,
         visible: false,
+        tablePagination:{
+          //  current: 1,
+            pageSize: 10,
+            total:'',
+        },
+        tablePagedList: [],
       };
-    
+      
       start = () => {
         this.setState({ loading: true });
         // ajax request after empty completing
@@ -58,10 +73,38 @@ class recipeList extends Component {
           visible: true,
         });
       }
-      //删除当前的
-      handleDelete(record,key){
-        console.log(record,key);
+      //删除当前的食谱
+      handleDelete=async(record)=>{
+        let dataDte=await deleterecipe(record);
+       
+        if(dataDte.code==0){
+          //提示成功 并且调用食谱列表函数
+          message.success('删除成功！');
+          this.fetch();
+        }else{
+          message.error(dataDte.msg);
+        }
       }
+
+      // 查看详情
+      viewClick=async(record)=>{
+        this.props.history.push('/admin/recipe/recipedetail/'+record.id);
+      }
+   
+    // 检车分页是否产生变化 *请求数据
+    tableChange=async(page)=>{
+      console.log(page);
+      let dataRes = await recipelist(page.current);
+      let data = dataRes.data.list;
+
+      console.log(data);
+      this.setState({
+        tablePagedList:data,
+        current: page
+      });
+    }
+ 
+
     //   同意添加测试用户
     handleOk = (e) => {
         console.log(e);
@@ -82,26 +125,55 @@ class recipeList extends Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
       }
+  
+      componentDidMount() {
+        this.fetch();
+      }
+      addrepice=async()=>{
+        this.props.history.push('/admin/recipe/addrecipe');
+      }
+      fetch = async (query = {}) => {
+        this.setState({ tableLoading: true });
+        let dataRes = await recipelist(1);
+        console.log(dataRes);
+        let data = dataRes.data.list;
+        const pagination = { ...this.state.tablePagination };
+        pagination.total = dataRes.data.total;
+        this.setState({
+            tableLoading: false,
+            tablePagedList: data,
+            tablePagination:pagination
+        });
+    }
+
+
+
   render() {
 
     const columns = [
+     
         {
           title: "食谱名称",
-          dataIndex: "name"
+          dataIndex: "title",
+          key: 'id'
         },
         {
           title: "状态",
-          dataIndex: "state"
+          dataIndex: "statusDesc",
+       
+
         },
         {
           title: "创建时间",
-          dataIndex: "createtime"
+          dataIndex: "createTime",
+         
+
         },
         {
             title: "操作",
             dataIndex: "operation",
             render: (text,record) => 
-            <Popconfirm title="你确定要删除当前食谱吗?" onConfirm={() => this.handleDelete(record.key)}>
+            <Popconfirm title="你确定要删除当前食谱吗?" onConfirm={() => this.handleDelete(record.id)}>
             <a href="javascript:;">删除</a>
             </Popconfirm>,
           },
@@ -109,8 +181,9 @@ class recipeList extends Component {
             title: "",
             dataIndex: "action",
             render: (text,record) => 
-            <a href="javascript:;">查看</a>,
+              <a href="javascript:;" onClick={this.viewClick.bind(text,record)}>查看</a>
             
+          
           },
           {
             title: "",
@@ -154,9 +227,9 @@ class recipeList extends Component {
             </Tooltip>
             {/*~~~~~~~  搜索输入框 ~~~~~~~~~~ */}
             <InputGroup compact className="InputSearch">
-              <Select defaultValue="Sign Up">
-                <Option value="Sign Up">全文搜索</Option>
-                <Option value="Sign In">分类搜索</Option>
+              <Select defaultValue="全文搜索">
+                <Option value="1">全文搜索</Option>
+                <Option value="2">分类搜索</Option>
               </Select>
               <AutoComplete
                 // dataSource={this.state.dataSource}
@@ -168,13 +241,16 @@ class recipeList extends Component {
             <Button type="primary" style={{ marginLeft: "20px" }}>
               搜索
             </Button>
-            <Button type="primary" onClick={this.showModal}>批量上架</Button>
+            <Button type="primary" onClick={this.addrepice}>添加食谱</Button>
+
+             {/*~~~~~~~ 
               <Button type="primary" onClick={this.showModal}>批量下架</Button>
                 <Button type="primary" onClick={this.showModal}>批量删除</Button>
+                ~~~~~~~~~~ */}
           </div>
            {/*~~~~~~~  表格 ~~~~~~~~~~ */}
-          <Table rowSelection={rowSelection} columns={columns} dataSource={data} className='table' />
-
+          <Table pagination={this.state.tablePagination} onChange={this.tableChange} rowSelection={rowSelection} rowKey={record => record.id}    columns={columns} dataSource={this.state.tablePagedList} className='table' />
+          
         </Card>
 
 
@@ -192,8 +268,11 @@ class recipeList extends Component {
         </p>
        
       </Modal>
+
+ 
       </div>
     );
   }
 }
-export default recipeList;
+export default withRouter(recipeList);
+
