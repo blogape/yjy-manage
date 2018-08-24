@@ -31,7 +31,6 @@ endLogin = () => {
            try{
             let res=await loginByUsername(userName,password);
             const data=res.data;
-            console.log(data);
             setToken(data);
           }
           catch(e){

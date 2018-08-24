@@ -2,8 +2,10 @@ import React,{Component}  from 'react';
 import { Form, Input, Tooltip,Button,Card} from 'antd'
 import Addname from './addname.js';
 import Ingredients from  './ingredients.js';
+import Steps from './steps.js';
+import Auxiliary   from './auxiliary.js'
 import  './index.less';
-class Recipeadd extends Component{
+class recipeadd extends Component{
     
     render(){
    
@@ -12,7 +14,9 @@ class Recipeadd extends Component{
             <div className='recipeadd'>
           {/* <Addname/>*/}
                 
-          <Ingredients></Ingredients>
+               {/*  <Ingredients></Ingredients>*/}
+               {/*   <Auxiliary></Auxiliary>*/}
+               <Steps></Steps>
             </div>
             </Card>
         )
@@ -20,4 +24,4 @@ class Recipeadd extends Component{
 
 }
 
-export default  Recipeadd;
+export default  recipeadd;

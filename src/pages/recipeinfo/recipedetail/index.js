@@ -31,9 +31,7 @@ class Recipedetail extends Component{
 
         }
   fetch = async (query = {}) => {
-    console.log(this.props)
     const data=await recipedetail(this.props.match.params.id );
-    console.log(data.data);
     this.setState({
       resdata:data.data,
       user:data.data.user,

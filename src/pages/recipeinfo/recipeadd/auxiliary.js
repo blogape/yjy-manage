@@ -5,7 +5,7 @@ import './index.less';
 const FormItem = Form.Item;
 
 let uuid = 0;
-class ingredients extends React.Component {
+class auxiliary extends React.Component {
   remove = (k) => {
     const { form } = this.props;
     // can use data-binding to get
@@ -66,10 +66,10 @@ class ingredients extends React.Component {
                 rules: [{
                   required: true,
                   whitespace: true,
-                  message: "请填写主料名称",
+                  message: "请填写辅料名称",
                 }],
               })(
-                <Input placeholder="请填写主料名称" style={{ width: '90%', marginRight: 8 }} />
+                <Input placeholder="请填写辅料名称" style={{ width: '90%', marginRight: 8 }} />
               )}
             </FormItem>
           </Col>
@@ -105,7 +105,7 @@ class ingredients extends React.Component {
     return (
       <div>
     
-      <h3>添加主料</h3>
+      <h3>添加辅料</h3>
       <Form onSubmit={this.handleSubmit}>
         {formItems}
         <FormItem {...formItemLayoutWithOutLabel}>
@@ -121,5 +121,5 @@ class ingredients extends React.Component {
     );
   }
 }
-export default Form.create()(ingredients)
+export default Form.create()(auxiliary)
 

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "ali-oss": "^6.0.1",
+    "ali-oss": "^4.13.2",
     "antd": "^3.4.3",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",

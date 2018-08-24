@@ -25,7 +25,7 @@ class IRouter extends Component {
                 <Route   path="/admin/home" component={Home} />
                 <Route   path="/admin/ui/modals" component={Modals} />
                 <Route   path="/admin/recipe/recipelist" component={Recipelist} />
-                <Route   path="/admin/recipe/recipedetail/:id" component={Recipedetail} />
+                <Route   path="/admin/recipe/recipedetail/id" component={Recipedetail} />
                 <Route   path="/admin/recipe/addrecipe" component={Addrecipe}/>
                 <Route   component={Nomatch} />
                 </Switch>
